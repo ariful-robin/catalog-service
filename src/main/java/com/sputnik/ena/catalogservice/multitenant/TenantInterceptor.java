@@ -32,9 +32,10 @@ public class TenantInterceptor extends HandlerInterceptorAdapter {
     			.substring(AUTHENTICATION_SCHEME.length()).trim();
     	
     	boolean isSigned = Jwts.parser().isSigned(authToken);
+    	String secret = Base64.getEncoder().encodeToString(signingKey.getBytes());
 
     	Claims claims = Jwts.parser()
-    			.setSigningKey(Base64.getEncoder().encode(signingKey.getBytes()))
+    			.setSigningKey(secret)
     			.parseClaimsJws(authToken)
     			.getBody();
 
