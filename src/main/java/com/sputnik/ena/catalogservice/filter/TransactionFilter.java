@@ -14,7 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.sputnik.ena.catalogservice.multitenant.TenantContext;
+import com.sputnik.ena.catalogservice.config.tenant.TenantContext;
+
 
 @Component
 public class TransactionFilter implements Filter {

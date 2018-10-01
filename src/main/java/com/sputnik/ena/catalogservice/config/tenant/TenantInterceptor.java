@@ -1,4 +1,4 @@
-package com.sputnik.ena.catalogservice.multitenant;
+package com.sputnik.ena.catalogservice.config.tenant;
 
 import java.util.Base64;
 
@@ -12,7 +12,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import io.jsonwebtoken.*;
-
+/**
+ * This class responsible for intercepting request. It parses the jwt token 
+ * and extract additional info of organization and set thread local variable
+ * tenantId of TenantContext class 
+ * @author robin
+ *
+ */
 @Component
 public class TenantInterceptor extends HandlerInterceptorAdapter {
 	private static final String AUTHENTICATION_SCHEME = "Bearer";
@@ -39,9 +45,9 @@ public class TenantInterceptor extends HandlerInterceptorAdapter {
     			.parseClaimsJws(authToken)
     			.getBody();
 
-    	String tenantId = "";
-    	authToken.length();
-    	//        String tenantId = jwtTokenUtil.getTenantIdFromToken(authToken);
+    	String orgId = (String) claims.get("organization");
+    	String tenantId = "catalog_" + orgId;
+    	
     	TenantContext.setCurrentTenant(tenantId);
     	return true;
     }
