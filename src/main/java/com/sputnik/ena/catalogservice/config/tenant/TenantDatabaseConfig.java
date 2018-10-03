@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -21,9 +22,16 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.sputnik.ena.catalogservice.entities.Product;
+import com.sputnik.ena.catalogservice.repositories.ProductRepository;
+import com.sputnik.ena.catalogservice.services.ProductService;
 
 @Configuration
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackages = {
+        "com.sputnik.ena.catalogservice.repositories",
+        "com.sputnik.ena.catalogservice.service" }, 
+        entityManagerFactoryRef = "tenantEntityManagerFactory", 
+        transactionManagerRef = "tenantTransactionManager")
 public class TenantDatabaseConfig {
 	private static final Logger logger = LoggerFactory
 			.getLogger(TenantDatabaseConfig.class);
@@ -86,6 +94,8 @@ public class TenantDatabaseConfig {
         //All tenant related entities, repositories and service classes must be scanned
         emfBean.setPackagesToScan(
                 new String[] { Product.class.getPackage().getName(),
+                		ProductRepository.class.getPackage().getName(),
+                		ProductService.class.getPackage().getName()
                       });
         emfBean.setJpaVendorAdapter(jpaVendorAdapter());
         emfBean.setPersistenceUnitName("tenantdb-persistence-unit");
