@@ -115,7 +115,7 @@ public class TenantDatabaseConfig {
                 "org.hibernate.dialect.MySQL5Dialect");
         properties.put(org.hibernate.cfg.Environment.SHOW_SQL, true);
         properties.put(org.hibernate.cfg.Environment.FORMAT_SQL, true);
-        properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, "update");
+        properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, "none");
 
         emfBean.setJpaPropertyMap(properties);
         logger.info("tenantEntityManagerFactory set up successfully!");
