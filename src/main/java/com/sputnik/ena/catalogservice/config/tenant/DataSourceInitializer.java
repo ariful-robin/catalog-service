@@ -1,7 +1,11 @@
 package com.sputnik.ena.catalogservice.config.tenant;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.sql.DataSource;
 
+import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,5 +52,36 @@ public class DataSourceInitializer {
 		logger.info("Configured datasource:" + tenant.getTenantId()
 		+ ". Connection poolname:" + tenantConnectionPoolName);
 		return ds;
+	}
+	
+	/**
+	 * This method is responsible for creating a new tenant schema based on given datasource only if
+	 * the schema doesn't exist currently.
+	 * @param ds The given datasource
+	 * @return Booelean This return true if successful and false otherwise
+	 */
+	@SuppressWarnings("deprecation")
+	public static Boolean createTenant(DataSource ds, String tenantIdentifier) {
+		Flyway flyway = new Flyway();
+		
+		//check the existing tenant list
+		/*String[] schemas = flyway.getSchemas();
+		List<String> schemaList = Arrays.asList(schemas);
+		if(schemaList.contains(tenantIdentifier)) {
+			logger.info("Tenant " + tenantIdentifier + "already exist.");
+			return false;
+		}*/
+		
+		try {
+			flyway.setLocations("db/migration/tenants");
+	        flyway.setDataSource(ds);
+	        flyway.setSchemas(tenantIdentifier);
+	        flyway.migrate();
+		}catch(Exception e) {
+			logger.info("Tenant Creation Failed");
+			return false;
+		}
+        
+		return true;
 	}
 }

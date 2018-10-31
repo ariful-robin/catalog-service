@@ -51,13 +51,16 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
 
         //tenantIdentifier = initializeTenantIfLost(tenantIdentifier);
 
-        if (!this.dataSourcesMtApp.containsKey(tenantIdentifier)) {
+        //if any tenant is not found in dataSourcesMtApp then whole list of tenants 
+		//is fetched and datasource map is reinitialized. 
+		if (!this.dataSourcesMtApp.containsKey(tenantIdentifier)) {
             List<MasterTenant> masterTenants = masterTenantRepo.findAll();
             logger.info(
                     ">>>> selectDataSource() -- tenant:" + tenantIdentifier + " Total tenants:" + masterTenants.size());
             for (MasterTenant masterTenant : masterTenants) {
+            	DataSource datasource = DataSourceInitializer.createAndConfigureDataSource(masterTenant);
                 dataSourcesMtApp.put(masterTenant.getTenantId(),
-                        DataSourceInitializer.createAndConfigureDataSource(masterTenant));
+                        datasource);
             }
         }
         return this.dataSourcesMtApp.get(tenantIdentifier);
