@@ -9,5 +9,5 @@ insert into products(id, code, name, description, price) VALUES
 DELETE FROM master_tenant;
 
 insert into master_tenant(id, tenant_id, url, username, password,version) VALUES
-(1, 'catalog_ena', 'jdbc:mysql://192.168.170.140:3306/catalog_sputnik?useSSL=false', 'docker', 'admin',0)
+(1, 'catalog_ena', 'jdbc:mysql://192.168.70.32:3306/catalog_sputnik?useSSL=false', 'docker', 'admin',0)
 ;
